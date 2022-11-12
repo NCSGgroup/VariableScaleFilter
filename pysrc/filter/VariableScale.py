@@ -13,7 +13,7 @@ def getPsi(sp, lat, lon):
 
     colat = np.pi / 2 - lat
 
-    colat_pie = np.pi / 2 - np.radians(np.arange(-89.5, 90.5, sp))
+    colat_pie = np.pi / 2 - np.radians(np.arange(-90 + sp / 2, 90 + sp / 2, sp))
     delta_lat = colat_pie - colat
 
     lon_pie = np.radians(np.arange(-180, 180, sp))

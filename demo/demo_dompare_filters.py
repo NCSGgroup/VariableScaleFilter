@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import numpy as np
 
-from pysrc.filter.VariableScale import VariableScale, VaryRadiusWay
+from pysrc.filter.VariableScaleGPU import VariableScale, VaryRadiusWay
 from pysrc.filter.Gaussian import IsotropyGaussian
 from pysrc.harmonic.Harmonic import Harmonic
 from pysrc.auxiliary.GeoMathKit import GeoMathKit
