@@ -1,9 +1,9 @@
 import numpy
 import cupy as np
 
-from SGPPToolbox.pysrc.harmonic.Harmonic import Harmonic
-from SGPPToolbox.pysrc.preference.Constants import GeoConstants
-from SGPPToolbox.pysrc.preference.Enumclasses import VaryRadiusWay
+from pysrc.harmonic.Harmonic import Harmonic
+from pysrc.preference.Constants import GeoConstants
+from pysrc.preference.Enumclasses import VaryRadiusWay
 
 
 def getPsi(sp, lat, lon):
@@ -14,10 +14,10 @@ def getPsi(sp, lat, lon):
 
     colat = np.pi / 2 - lat
 
-    colat_pie = np.pi / 2 - np.radians(np.arange(-89.5, 90.5, sp))
+    colat_pie = np.pi / 2 - np.radians(np.arange(-90 + sp / 2, 90 + sp / 2, sp))
     delta_lat = colat_pie - colat
 
-    lon_pie = np.radians(np.arange(-180, 180, sp))
+    lon_pie = np.radians(np.arange(-180 + sp / 2, 180 + sp / 2, sp))
     delta_lon = lon - lon_pie
 
     colat_pie, lon_pie = np.meshgrid(colat_pie, lon_pie)

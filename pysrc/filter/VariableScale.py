@@ -1,6 +1,5 @@
 import numpy as np
 
-from pysrc.filter.Base import SHCFilter
 from pysrc.harmonic.Harmonic import Harmonic
 from pysrc.preference.Constants import GeoConstants
 from pysrc.preference.Enumclasses import VaryRadiusWay
