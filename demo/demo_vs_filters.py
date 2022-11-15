@@ -1,7 +1,4 @@
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
 
 from pysrc.harmonic.Harmonic import Harmonic
 from pysrc.auxiliary.GeoMathKit import GeoMathKit
@@ -9,6 +6,7 @@ from pysrc.auxiliary.GeoMathKit import GeoMathKit
 from pysrc.filter.VariableScale import VariableScale, VaryRadiusWay
 
 # from pysrc.filter.VariableScaleGPU import VariableScale, VaryRadiusWay
+
 """
 To speed up the calculation when the data is too big,
 we have provided the GPU version of variable-scale (VS) filter (i.e., VariableScaleGPU.py).
@@ -17,7 +15,7 @@ The implementation of VariableScaleGPU.py depends on CUDA.
 These two programs has the same usage, and a simple change of import would work.
 
 Due to the limitation of calculation accuracy, 
-the results of these two programs (CPU and GPU ones) may have a difference of ~1e-16 on the final EWH anomaly
+the results of these two programs (CPU and GPU ones) may have a RMSE of ~1e-13 on the final EWH anomaly
 """
 
 
@@ -42,23 +40,25 @@ def demo():
     grid_space: to represent the spatial resolution (in unit [degree]).
     """
 
-    vs_r_min = 200
+    vs_r_min = 75
     vs_r_max = 500
-    vs_sigma = np.array([[1, 0], [0, 0.5]])
+    vs_sigma = np.array([[1, 0], [0, 1]])
     vary_radius_mode = VaryRadiusWay.sin
 
-    grid_space = 0.5
+    grid_space = 1
 
     """start program"""
 
     """load EWHA file"""
     """
-    file '../data/EWHA_200501.npy' is calculated using GRACE Level-2 GSM (CSR Release 06), 
+    file '../data/GRACE_GSM/ewh_201501_p3m10' is calculated using GRACE Level-2 GSM (CSR Release 06), 
     with degree1/c20/c30 replaced by TN-13 and TN-14 files,
+    to which adding back GAD model,
+    from which removing GIA model,
     deducting a long-term average field over the period from 2005 to 2015,
-    and then convert geoid anomaly into equivalent water height anomaly (EWHA).
+    then converted the physical quantity geoid anomaly into equivalent water height anomaly (EWHA).
     """
-    shc_ewha = np.load('../data/GRACE_GSM/EWHA_200501.npy')
+    shc_ewha = np.load('../data/GRACE_GSM/ewh_201501_p3m10.npy')
     Clm, Slm = shc_ewha[0], shc_ewha[1]
 
     """define harmonic tool"""
@@ -77,7 +77,15 @@ def demo():
     '''harmonic synthesis'''
     grid_vs = har.synthesis(*CS_vs)[0]
 
-    np.save('../results/test.npy', grid_vs)
+    '''make a validation'''
+    validation = np.load('../results/verification/ewh_grid_201501_p3m10_vs75to500.npy')
+
+    flat = ((grid_vs - validation) / validation).flatten()
+    rmse = np.sqrt(np.sum(flat ** 2) / len(flat))
+
+    if rmse < 1e-12:
+        print('The code is correctly configured!')
+    pass
 
 
 if __name__ == '__main__':

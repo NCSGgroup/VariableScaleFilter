@@ -81,7 +81,7 @@ class VariableScale:
 
         return weight
 
-    def apply_to(self, *params: np.ndarray, option=0):
+    def apply_to(self, *params, option=0):
         """
 
         :param params: SHC Cqlm and Sqlm if option=0, else grids.
