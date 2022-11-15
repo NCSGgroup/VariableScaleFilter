@@ -3,9 +3,9 @@ import numpy as np
 from pysrc.harmonic.Harmonic import Harmonic
 from pysrc.auxiliary.GeoMathKit import GeoMathKit
 
-from pysrc.filter.VariableScale import VariableScale, VaryRadiusWay
+# from pysrc.filter.VariableScale import VariableScale, VaryRadiusWay
 
-# from pysrc.filter.VariableScaleGPU import VariableScale, VaryRadiusWay
+from pysrc.filter.VariableScaleGPU import VariableScale, VaryRadiusWay
 
 """
 To speed up the calculation when the data is too big,
@@ -15,7 +15,7 @@ The implementation of VariableScaleGPU.py depends on CUDA.
 These two programs has the same usage, and a simple change of import would work.
 
 Due to the limitation of calculation accuracy, 
-the results of these two programs (CPU and GPU ones) may have a RMSE of ~1e-13 on the final EWH anomaly
+the results of these two programs (CPU and GPU ones) may have a RMSE of ~1e-11 on the final EWH anomaly
 """
 
 
@@ -40,7 +40,7 @@ def demo():
     grid_space: to represent the spatial resolution (in unit [degree]).
     """
 
-    vs_r_min = 75
+    vs_r_min = 100
     vs_r_max = 500
     vs_sigma = np.array([[1, 0], [0, 1]])
     vary_radius_mode = VaryRadiusWay.sin
@@ -78,14 +78,16 @@ def demo():
     grid_vs = har.synthesis(*CS_vs)[0]
 
     '''make a validation'''
-    validation = np.load('../results/verification/ewh_grid_201501_p3m10_vs75to500.npy')
+
+    validation = np.load('../results/validation/ewh_grid_201501_p3m10_vs75to500.npy')
 
     flat = ((grid_vs - validation) / validation).flatten()
     rmse = np.sqrt(np.sum(flat ** 2) / len(flat))
 
-    if rmse < 1e-12:
+    if rmse < 1e-11:
         print('The code is correctly configured!')
-    pass
+    else:
+        print(rmse)
 
 
 if __name__ == '__main__':
