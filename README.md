@@ -5,9 +5,18 @@ In this context, we establish this software to numerically realize a new design 
 filter,
 which can take both the variance and the anisotropy of noise into consideration.
 Fig.1 shows the comparison of our new smoother and traditional Gaussian one.
-Please see our paper 
+Please see our paper
 _An Over-smoothed GRACE Gravity Field in High-latitudes Imbalances the Ocean Budget_
 for details.
+
+Tips for the usage of the software:
+
+1. A successful implemention of the software requires a Python environment, and Anaconda is recommended.
+2. The python source files are stored in the directory of '\pysrc', and the example data are also provided in the
+   directory of '\data'.
+3. Just running the demo in the directory of '\demo' to see the result, and an output from us is also provided in the
+   directory of '\results' for a verification of your installation.
+
 
 <center>
     <img style="border-radius: 0.3125em;
@@ -18,11 +27,3 @@ for details.
     display: inline-block;
     padding: 2px;">(Fig. 1) </div>
 </center>
-
-Tips for the usage of the software:
-
-1. A successful implemention of the software requires a Python environment, and Anaconda is recommended.
-2. The python source files are stored in the directory of '\pysrc', and the example data are also provided in the
-   directory of '\data'.
-3. Just running the demo in the directory of '\demo' to see the result, and an output from us is also provided in the
-   directory of '\results' for a verification of your installation.
