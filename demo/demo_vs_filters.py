@@ -53,8 +53,6 @@ def demo():
     """
     file '../data/GRACE_GSM/ewh_201501_p3m10' is calculated using GRACE Level-2 GSM (CSR Release 06), 
     with degree1/c20/c30 replaced by TN-13 and TN-14 files,
-    to which adding back GAD model,
-    from which removing GIA model,
     deducting a long-term average field over the period from 2005 to 2015,
     then converted the physical quantity geoid anomaly into equivalent water height anomaly (EWHA).
     """
