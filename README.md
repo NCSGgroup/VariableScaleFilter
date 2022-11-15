@@ -13,4 +13,4 @@ Tips for the usage of the software:
 3. Just running the demo in the directory of '\demo' to see the result, and an output from us is also provided in the
    directory of '\results' for a verification of your installation.
 
-[123]('results/plot_vs_filter/demo_pic.pdf')
+![123]('https://github.com/NCSGgroup/VariableScaleFilter/blob/main/img/plot_vs_filter/demo_pic.pdf')
