@@ -7,7 +7,7 @@ which can take both the variance and the anisotropy of noise into consideration.
 Fig.1 shows the comparison of our new smoother and traditional Gaussian one.
 Please see our paper
 _An Over-smoothed GRACE Gravity Field in High-latitudes Imbalances the Ocean Budget_
-for details.
+for more details.
 
 Tips for the usage of the software:
 
