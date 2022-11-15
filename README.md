@@ -16,7 +16,7 @@ for details.
     <br>
     <div style="
     display: inline-block;
-    padding: 2px;">Fig. 1 GRACE EWH after applying different smoothers </div>
+    padding: 2px;">(Fig. 1) </div>
 </center>
 
 Tips for the usage of the software:
