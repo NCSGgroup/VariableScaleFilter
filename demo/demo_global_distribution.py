@@ -180,7 +180,7 @@ def demo_global_distribution():
     lmax = 60
     clm, slm = loadCS(filepath, key='gfc', lmax=60)
 
-    '''Define spatial resolution (degree) of a grid'''
+    '''Define spatial resolution [degree] of a grid'''
     grid_space = 1
 
     '''Define a harmonic tool which will be used to transform SHCs to grid format.'''
