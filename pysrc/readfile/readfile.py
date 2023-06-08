@@ -35,4 +35,4 @@ def loadCS(filepath: Path, key: str, lmax: int):
                 Clm[l, m] = float(this_line[c_queue - 1])
                 Slm[l, m] = float(this_line[s_queue - 1])
 
-    return Clm, Slm
+    return np.array(Clm), np.array(Slm)

@@ -38,7 +38,7 @@ class VariableScale:
     def __init__(self, r_function, sigma=None, harmonic: Harmonic = None):
         """
 
-        :param r_function: a function to explain the relationship between smoothing radius [m] and latitude [rad], that is, input a parameter latitude and return the corresponding smoothing radius.
+        :param r_function: a function to explain the relationship between smoothing radius [m] and latitude [degree], that is, input a parameter latitude and return the corresponding smoothing radius.
         :param sigma: relative standard deviation of Gaussian distribution in the direction of latitude (that in the longitude is supposed to be 1), generally between 0 and 1.
         :param harmonic: harmonic tool define in ../harmonic/Harmonic.py, necessary if smoothed object in the spherical harmonic form.
         """
