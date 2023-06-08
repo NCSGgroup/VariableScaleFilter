@@ -5,31 +5,6 @@ from harmonic.Harmonic import Harmonic
 from preference.Constants import GeoConstants
 
 
-def getPsi(sp, lat, lon):
-    """
-    lat, lon in unit[rad].
-    """
-    Psi = np.zeros((int(180 / sp), int(360 / sp), 2))
-
-    colat = np.pi / 2 - lat
-
-    colat_pie = np.pi / 2 - np.radians(np.arange(-90 + sp / 2, 90 + sp / 2, sp))
-    delta_lat = colat_pie - colat
-
-    lon_pie = np.radians(np.arange(-180 + sp / 2, 180 + sp / 2, sp))
-    delta_lon = lon - lon_pie
-
-    colat_pie, lon_pie = np.meshgrid(colat_pie, lon_pie)
-
-    delta_lat, delta_lon = np.meshgrid(delta_lat, delta_lon)
-
-    # Psi[:, :, 0] = (np.sin(delta_lon / 2) * np.sin((colat_pie + colat) / 2)).T
-    Psi[:, :, 0] = (np.sin(delta_lon / 2) * np.sqrt(np.sin(colat_pie) * np.sin(colat))).T
-    Psi[:, :, 1] = (np.sin(delta_lat / 2)).T
-
-    return Psi
-
-
 class VariableScale:
     """
     This class is to smooth grids by applying a spatial convolution with a variable-scale non-isotropy Gaussian kernel.
@@ -63,7 +38,7 @@ class VariableScale:
         :return:
         """
 
-        Psi = getPsi(sp, lat, lon)
+        Psi = self.getPsi(sp, lat, lon)
 
         r_lat = self.r_function(lat)
 
@@ -128,3 +103,28 @@ class VariableScale:
 
         else:
             return Gqij_filtered
+
+    @staticmethod
+    def getPsi(sp, lat, lon):
+        """
+        lat, lon in unit[rad].
+        """
+        Psi = np.zeros((int(180 / sp), int(360 / sp), 2))
+
+        colat = np.pi / 2 - lat
+
+        colat_pie = np.pi / 2 - np.radians(np.arange(-90 + sp / 2, 90 + sp / 2, sp))
+        delta_lat = colat_pie - colat
+
+        lon_pie = np.radians(np.arange(-180 + sp / 2, 180 + sp / 2, sp))
+        delta_lon = lon - lon_pie
+
+        colat_pie, lon_pie = np.meshgrid(colat_pie, lon_pie)
+
+        delta_lat, delta_lon = np.meshgrid(delta_lat, delta_lon)
+
+        # Psi[:, :, 0] = (np.sin(delta_lon / 2) * np.sin((colat_pie + colat) / 2)).T
+        Psi[:, :, 0] = (np.sin(delta_lon / 2) * np.sqrt(np.sin(colat_pie) * np.sin(colat))).T
+        Psi[:, :, 1] = (np.sin(delta_lat / 2)).T
+
+        return Psi
