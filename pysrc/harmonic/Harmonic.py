@@ -1,8 +1,6 @@
-import time
-
 import numpy as np
 
-from pysrc.auxiliary.GeoMathKit import GeoMathKit
+from auxiliary.GeoMathKit import GeoMathKit
 
 
 class Harmonic:
