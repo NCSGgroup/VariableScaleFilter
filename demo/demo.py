@@ -1,7 +1,10 @@
 import pathlib
-
 import numpy as np
+
+from preference.Enumclasses import FieldType
 from readfile.readfile import loadCS
+from Love_number.LoveNumber import LoveNumber, LoveNumberType
+from convert_field_type.ConvertSHC import ConvertSHC
 from filter.VariableScale import VariableScale
 from harmonic.Harmonic import Harmonic
 from auxiliary.GeoMathKit import GeoMathKit
@@ -22,24 +25,37 @@ def demo():
     '''
     lmax = 60
 
-    filepath_grace = pathlib.Path('../data/GSM-2_2005001-2005031_GRAC_UTCSR_BA01_0600')
+    filepath_grace = pathlib.Path('../data/GSM/GSM-2_2005001-2005031_GRAC_UTCSR_BA01_0600')
     clm, slm = loadCS(filepath=filepath_grace, key='GRCOF2', lmax=lmax)
 
-    filepath_grace = pathlib.Path('../data/GIF48.gfc')
+    filepath_grace = pathlib.Path('../data/Auxiliary/GIF48.gfc')
     clm_bg, slm_bg = loadCS(filepath=filepath_grace, key='gfc', lmax=lmax)
 
     clm -= clm_bg
     slm -= slm_bg
 
     '''
+    Convert SHCs from Dimensionless to EWH with class ConvertSHC.
+    Class ConvertSHC requires four initialization parameters, c, s, field_type and ln.
+    Attribute c and s are SHCs.
+    Attribute field_type requires an enumeration type FieldType, and describe the field type input c and s.
+        Generally speaking, the GRACE GSM file provides a dimensionless gravity field model,
+        here field_type=FieldType.Dimensionless.
+    Attribute ln is Love number, given by class LoveNumber as follow. Please see the source code for more details.
+    '''
+
+    ln = LoveNumber('../data/Auxiliary/').getNumber(lmax, LoveNumberType.Wang)
+    convert = ConvertSHC(clm, slm, field_type=FieldType.Dimensionless, ln=ln)
+    convert.convert_to(FieldType.EWH)
+    clm, slm = convert.getCS()
+
+    '''
     Define a harmonic tool which will be used to transform SHCs to grid format by class Harmonic.
     Harmonic requires three initialization parameters, that is lat, lon, pilm, lmax, and option.
     Attributes grid_space as follow defines the spatial resolution [degree] of a grid.
     Attributes lat and lon are the Geographic longitudes and latitudes used in following programs.
-    Attributes pilm is the legendre the associative Legendre polynomials polynomials given as a three-dimension array,
-        respectively representing co-latitude[rad], degree l and order m,
-        and pilm is given by tool function GeoMathKit.getLegendre,
-        see the source code for more details.
+    Attributes pilm is the legendre the associative Legendre polynomials polynomials given by tool function 
+        GeoMathKit.getLegendre. Please see the source code for more details.
     Attributes option prescribed the form of input lat and lon,
         which denote co-latitude and longitude in unit[rad] if option=0;
         or latitude and longitude in unit[degree] elsewhere.
@@ -69,32 +85,19 @@ def demo():
 
     '''
     Convert SHCs to grids by harmonic synthesis.
-    Function .systhesis(cqlm, sqlm) requires SHC c and s in three-dimension array to process multiple sets of data,
-        of which the first dimension stands for the sequence of the data sets,
-        and the second and the third dimension stand for the degree l and order m.
-    Returned result is grids of a three-dimension array,
-        of which the first dimension stands for the sequence of the data sets,
-        and the second and the third dimension stand for the sequence of latitudes and longitudes.
+    Function .systhesis(c, s) requires SHC C and S.
+    Returned result is grid.
     '''
-    grids = har.synthesis(np.array([clm]), np.array([slm]))
+    grid = har.synthesis(clm, slm)
 
     '''
     Filter the SHCs with different filters defined before.
     The input and output of .apply_to(*params, option) requires different format with different setting of option.
-    If option=0, *params need two parameters, that is,
-        SHC c and s in three-dimension array to process multiple sets of data,
-        of which the first dimension stands for the sequence of the sets,
-        and the second and the third one stand for the degree l and order m,
-        and then the returned result is a tuple containing two elements, that is, filtered cqlm and sqlm,
-        which have the same structure of the inputs.
-    Otherwise, *params need one parameter, that is,
-        grids of a three-dimension array, 
-        of which the first dimension stands for the sequence of the data sets,
-        and the second and the third dimension stand for the sequence of latitudes and longitudes,
-        and then the returned result is a three-dimension array, that is, filtered grids,
-        which have the same structure of the inputs.
+    If option=0, *params need two parameters, that is, SHC C and S.
+    Otherwise, *params need one parameter, that is, grid.
+    Returned result is consistent with the form of input data.
     '''
-    grids_filtered = vs.apply_to(grids, option=1)
+    grid_filtered = vs.apply_to(grid, option=1)
 
 
 if __name__ == '__main__':
