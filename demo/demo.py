@@ -50,7 +50,7 @@ def demo():
     clm, slm = convert.getCS()
 
     '''
-    Define a harmonic tool which will be used to transform SHCs to grid format by class Harmonic.
+    Define a harmonic tool which will be used to transform SHCs to grid (spatial distribution) format by class Harmonic.
     Harmonic requires three initialization parameters, that is lat, lon, pilm, lmax, and option.
     Attributes grid_space as follow defines the spatial resolution [degree] of a grid.
     Attributes lat and lon are the Geographic longitudes and latitudes used in following programs.
