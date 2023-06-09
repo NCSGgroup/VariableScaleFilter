@@ -1,6 +1,7 @@
 from inspect import isfunction
 import numpy as np
 
+from auxiliary.GeoMathKit import GeoMathKit
 from harmonic.Harmonic import Harmonic
 from preference.Constants import GeoConstants
 
@@ -70,6 +71,11 @@ class VariableScale:
             assert len(params) == 1
             Gqij = params[0]
 
+        single_data_flag = False
+        if Gqij.ndim == 2:
+            single_data_flag = True
+            Gqij = GeoMathKit.getCSGridin3d(Gqij)
+
         grid_space = 180 / np.shape(Gqij)[1]
 
         lat = np.radians(np.arange(-90 + grid_space / 2, 90 + grid_space / 2, grid_space))
@@ -97,6 +103,9 @@ class VariableScale:
             Gqij_pie[:, :, :length_of_lon - j], Gqij_pie[:, :, length_of_lon - j:] = Gqij[:, :, j:], Gqij[:, :, :j]
             Gqij_filtered[:, :, j] = np.einsum('rij,qij->qr', Wipq, Gqij_pie) * d_sigma
         print('done!')
+
+        if single_data_flag:
+            Gqij_filtered = Gqij_filtered[0]
 
         if option == 0:
             return self.harmonic.analysis(Gqij_filtered)

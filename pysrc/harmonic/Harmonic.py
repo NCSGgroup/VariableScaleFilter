@@ -38,6 +38,12 @@ class Harmonic:
         pass
 
     def analysis(self, Gqij: np.ndarray):
+
+        single_data_flag = False
+        if Gqij.ndim == 2:
+            single_data_flag = True
+            Gqij = GeoMathKit.getCSGridin3d(Gqij)
+
         g = self.g.T
         co = np.cos(g)
         so = np.sin(g)
@@ -45,64 +51,29 @@ class Harmonic:
         Am = np.einsum('pij,jm->pim', Gqij, co, optimize='greedy') * self.factor1
         Bm = np.einsum('pij,jm->pim', Gqij, so, optimize='greedy') * self.factor1
 
-        Cnms = np.einsum('pim,ilm,i->plm', Am, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
-        Snms = np.einsum('pim,ilm,i->plm', Bm, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
-        return Cnms, Snms
+        cqlm = np.einsum('pim,ilm,i->plm', Am, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
+        sqlm = np.einsum('pim,ilm,i->plm', Bm, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
 
-    def analysis3d(self, Inners: np.ndarray):
-        assert np.shape(Inners)[0] >= self.nmax
+        if single_data_flag:
+            cqlm, sqlm = cqlm[0], sqlm[0]
+        return cqlm, sqlm
 
-        Cqlm, Sqlm = self.analysis(Inners)
+    def synthesis(self, cqlm: np.ndarray, sqlm: np.ndarray):
+        assert len(cqlm) == len(sqlm)
 
-        Clm = np.zeros((self.nmax + 1, self.nmax + 1))
-        Slm = np.zeros((self.nmax + 1, self.nmax + 1))
+        single_data_flag = False
+        if cqlm.ndim == 2:
+            single_data_flag = True
+            cqlm, sqlm = GeoMathKit.getCSGridin3d(cqlm, sqlm)
 
-        for l in range(self.nmax + 1):
-            Clm[l, :l + 1] = Cqlm[l, l, :l + 1]
-            Slm[l, :l + 1] = Sqlm[l, l, :l + 1]
-
-        return Clm, Slm
-
-    def analysis3d_new(self, Inners: np.ndarray):
-        """
-
-        :param Inners: 4-d array(qpij), d1(q) for the amount of data(such as months), d2(p) for the layers(>=l),
-        d3(i) and d4(j) for the grid index, i.e. co-latitude index and longitude index.
-        :return: 3-d array(plm)
-        """
-        assert np.shape(Inners)[1] >= self.nmax
-
-        # Cqlm, Sqlm = self.analysis(Inners)
-        g = self.g.T
-        co = np.cos(g)
-        so = np.sin(g)
-
-        Am = np.einsum('qpij,jm->qpim', Inners, co, optimize='greedy') * self.factor1
-        Bm = np.einsum('qpij,jm->qpim', Inners, so, optimize='greedy') * self.factor1
-
-        Cqplm = np.einsum('qpim,ilm,i->qplm', Am, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
-        Sqplm = np.einsum('qpim,ilm,i->qplm', Bm, self.PnmMatrix, np.sin(self.lat), optimize='greedy') * self.factor2
-
-        Cqlm = np.zeros((np.shape(Inners)[0], self.nmax + 1, self.nmax + 1))
-        Sqlm = np.zeros((np.shape(Inners)[0], self.nmax + 1, self.nmax + 1))
-
-        for l in range(self.nmax + 1):
-            Cqlm[:, l, :l + 1] = Cqplm[:, l, l, :l + 1]
-            Sqlm[:, l, :l + 1] = Sqplm[:, l, l, :l + 1]
-
-        return Cqlm, Sqlm
-
-    def synthesis(self, Cnms: iter, Snms: iter):
-        assert len(Cnms) == len(Snms)
-        Cnms = np.array(Cnms)
-        Snms = np.array(Snms)
-
-        Am = np.einsum('ijk,ljk->ilk', Cnms, self.PnmMatrix)
-        Bm = np.einsum('ijk,ljk->ilk', Snms, self.PnmMatrix)
+        Am = np.einsum('ijk,ljk->ilk', cqlm, self.PnmMatrix)
+        Bm = np.einsum('ijk,ljk->ilk', sqlm, self.PnmMatrix)
 
         co = np.cos(self.g)
         so = np.sin(self.g)
 
         Fout = Am @ co + Bm @ so
 
+        if single_data_flag:
+            Fout = Fout[0]
         return Fout

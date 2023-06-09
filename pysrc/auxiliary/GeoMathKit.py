@@ -54,3 +54,17 @@ class GeoMathKit:
                     * Pnm[:, n - 2, m]
 
         return Pnm
+
+    @staticmethod
+    def getCSGridin3d(*clm: np.ndarray):
+        cqlm_list = []
+        for i in range(len(clm)):
+            if clm[i].ndim == 2:
+                cqlm = np.array([clm[i]])
+                cqlm_list.append(cqlm)
+
+        if len(cqlm_list) == 1:
+            return cqlm_list[0]
+
+        else:
+            return tuple(cqlm_list)
