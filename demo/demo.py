@@ -1,13 +1,13 @@
 import pathlib
 import numpy as np
 
-from preference.Enumclasses import FieldType
-from readfile.readfile import loadCS
-from Love_number.LoveNumber import LoveNumber, LoveNumberType
-from convert_field_type.ConvertSHC import ConvertSHC
-from filter.VariableScale import VariableScale
-from harmonic.Harmonic import Harmonic
-from auxiliary.GeoMathKit import GeoMathKit
+from pysrc.preference.Enumclasses import FieldType
+from pysrc.readfile.readfile import loadCS
+from pysrc.Love_number.LoveNumber import LoveNumber, LoveNumberType
+from pysrc.convert_field_type.ConvertSHC import ConvertSHC
+from pysrc.filter.VariableScale import VariableScale
+from pysrc.harmonic.Harmonic import Harmonic
+from pysrc.auxiliary.GeoMathKit import GeoMathKit
 
 
 def demo():

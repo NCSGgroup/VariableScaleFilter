@@ -4,7 +4,7 @@ import numpy as np
 import scipy.io as scio
 from scipy import interpolate
 
-from preference.Enumclasses import LoveNumberType
+from pysrc.preference.Enumclasses import LoveNumberType
 
 
 class LoveNumber:

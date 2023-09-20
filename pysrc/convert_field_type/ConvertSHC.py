@@ -1,7 +1,7 @@
 import numpy as np
-from preference.Enumclasses import FieldType
-from preference.Constants import GeoConstants
-from auxiliary.GeoMathKit import GeoMathKit
+from pysrc.preference.Enumclasses import FieldType
+from pysrc.preference.Constants import GeoConstants
+from pysrc.auxiliary.GeoMathKit import GeoMathKit
 
 
 class ConvertSHC:

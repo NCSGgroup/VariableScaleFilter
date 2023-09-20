@@ -1,9 +1,9 @@
 from inspect import isfunction
 import numpy as np
 
-from auxiliary.GeoMathKit import GeoMathKit
-from harmonic.Harmonic import Harmonic
-from preference.Constants import GeoConstants
+from pysrc.auxiliary.GeoMathKit import GeoMathKit
+from pysrc.harmonic.Harmonic import Harmonic
+from pysrc.preference.Constants import GeoConstants
 
 
 class VariableScale:

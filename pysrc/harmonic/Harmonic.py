@@ -1,6 +1,6 @@
 import numpy as np
 
-from auxiliary.GeoMathKit import GeoMathKit
+from pysrc.auxiliary.GeoMathKit import GeoMathKit
 
 
 class Harmonic:
